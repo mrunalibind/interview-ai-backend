@@ -30,7 +30,7 @@ async function generateInterViewReportController(req, res) {
         jobDescription,
         ...interViewReportByAi
     })
-    console.log({interviewReport});
+    // console.log({interviewReport});
     res.status(201).json({
         message: "Interview report generated successfully.",
         interviewReport
@@ -46,7 +46,7 @@ async function getInterviewReportByIdController(req, res) {
     const { interviewId } = req.params
 
     const interviewReport = await interviewReportModel.findOne({ _id: interviewId, user: req.user.id })
-    console.log({interviewReportById: interviewReport});
+    // console.log({interviewReportById: interviewReport});
     if (!interviewReport) {
         return res.status(404).json({
             message: "Interview report not found."
@@ -66,7 +66,7 @@ async function getInterviewReportByIdController(req, res) {
 async function getAllInterviewReportsController(req, res) {
     const interviewReports = await interviewReportModel.find({ user: req.user.id }).sort({ createdAt: -1 }).select("-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan")
 
-    console.log({loggedInInterviewReport: interviewReports});
+    // console.log({loggedInInterviewReport: interviewReports});
 
     res.status(200).json({
         message: "Interview reports fetched successfully.",

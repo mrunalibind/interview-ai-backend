@@ -69,6 +69,12 @@ async function loginUserController(req, res) {
 
     const { email, password } = req.body
 
+    if(!email || !password) {
+        return res.status(400).json({
+            message: "Please provide email and password"
+        })
+    }
+
     const user = await userModel.findOne({ email })
 
     if (!user) {
@@ -97,7 +103,6 @@ async function loginUserController(req, res) {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
     });
     
-    console.log(req.cookies);
     res.status(200).json({
         message: "User loggedIn successfully.",
         user: {
@@ -134,9 +139,9 @@ async function logoutUserController(req, res) {
  * @access private
  */
 async function getMeController(req, res) {
-    console.log("Working");
+    // console.log("Working");
     const user = await userModel.findById(req.user.id)
-    console.log(user);
+    // console.log(user);
     res.status(200).json({
         message: "User details fetched successfully",
         user: {

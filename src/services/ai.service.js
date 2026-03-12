@@ -186,7 +186,7 @@ async function generatePdfFromHtml(htmlContent) {
             right: "15mm"
         }
     })
-    console.log("PDF buffer*************")
+    // console.log("PDF buffer*************")
     await browser.close()
 
     return pdfBuffer
@@ -223,7 +223,7 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
     const jsonContent = JSON.parse(response.text)
 
     const pdfBuffer = await generatePdfFromHtml(jsonContent.html)
-    console.log("PDF generated***********")
+    // console.log("PDF generated***********")
     return pdfBuffer
 
 }
