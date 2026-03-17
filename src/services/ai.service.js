@@ -165,31 +165,35 @@ Each technicalQuestions item must be an object with question, intention, and ans
 }
 
 async function generatePdfFromHtml(htmlContent) {
-    const isProduction = process.env.NODE_ENV == "production";
-    const browser = await puppeteer.launch({
-      executablePath: isProduction ? "/opt/render/.cache/puppeteer/chrome/linux-146.0.7680.66/chrome-linux64/chrome" : undefined,
-      headless: true,
-      args: [
-        "--no-sandbox", 
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage"
-      ]
-    });
-    const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: "networkidle0" })
-
-    const pdfBuffer = await page.pdf({
-        format: "A4", margin: {
-            top: "20mm",
-            bottom: "20mm",
-            left: "15mm",
-            right: "15mm"
-        }
-    })
-    // console.log("PDF buffer*************")
-    await browser.close()
-
-    return pdfBuffer
+    try {
+      const isProduction = process.env.NODE_ENV == "production";
+      const browser = await puppeteer.launch({
+        executablePath: isProduction ? "/opt/render/.cache/puppeteer/chrome/linux-146.0.7680.66/chrome-linux64/chrome" : undefined,
+        headless: true,
+        args: [
+          "--no-sandbox", 
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage"
+        ]
+      });
+      const page = await browser.newPage();
+      await page.setContent(htmlContent, { waitUntil: "networkidle0" })
+  
+      const pdfBuffer = await page.pdf({
+          format: "A4", margin: {
+              top: "20mm",
+              bottom: "20mm",
+              left: "15mm",
+              right: "15mm"
+          }
+      })
+      // console.log("PDF buffer*************")
+      await browser.close()
+  
+      return pdfBuffer
+    } catch (error) {
+      return res.status(500).json({message: error});
+    }
 }
 
 async function generateResumePdf({ resume, selfDescription, jobDescription }) {
