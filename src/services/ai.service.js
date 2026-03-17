@@ -179,6 +179,9 @@ async function generatePdfFromHtml(htmlContent) {
       const page = await browser.newPage();
       await page.setContent(htmlContent, { waitUntil: "networkidle0" })
   
+      console.log("Node ENV:", process.env.NODE_ENV);
+      console.log("Platform:", process.platform);
+
       const pdfBuffer = await page.pdf({
           format: "A4", margin: {
               top: "20mm",
@@ -192,7 +195,9 @@ async function generatePdfFromHtml(htmlContent) {
   
       return pdfBuffer
     } catch (error) {
-      return res.status(500).json({message: error});
+      console.error("PDF Generation Error:");
+      console.error("Message:", error.message);
+      console.error("Stack:", error.stack);
     }
 }
 
