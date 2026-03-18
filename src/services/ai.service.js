@@ -1,7 +1,7 @@
 const { GoogleGenAI } = require("@google/genai")
 const { z } = require("zod")
 const { zodToJsonSchema } = require("zod-to-json-schema")
-const puppeteer = require("puppeteer")
+const puppeteer = require("puppeteer-core")
 const fs = require("fs");
 const path = require("path");
 
@@ -166,19 +166,16 @@ Each technicalQuestions item must be an object with question, intention, and ans
 
 }
 
-function getChromePath() {
-  const base = "/opt/render/.cache/puppeteer/chrome";
-  const folders = fs.readdirSync(base);
-  const chromeFolder = folders.find(f => f.startsWith("linux-"));
-  return path.join(base, chromeFolder, "chrome-linux64", "chrome");
-}
-
 async function generatePdfFromHtml(htmlContent) {
+  let browser;
     try {
       const chromePath =
       process.env.NODE_ENV === "production"
-        ? getChromePath()
+        ? "/opt/render/project/src/.cache/puppeteer/chrome/linux-146.0.7680.66/chrome-linux64/chrome"
         : undefined;
+
+      console.log("Chrome path:", chromePath);
+
 
       console.log("NODE_ENV:", process.env.NODE_ENV);
       console.log("Using Chrome path:", chromePath);
