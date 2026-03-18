@@ -166,9 +166,16 @@ Each technicalQuestions item must be an object with question, intention, and ans
 
 async function generatePdfFromHtml(htmlContent) {
     try {
-      const isProduction = process.env.NODE_ENV == "production";
+      const chromePath =
+      process.env.NODE_ENV === "production"
+        ? "/opt/render/.cache/puppeteer/chrome/linux-146.0.7680.66/chrome-linux64/chrome"
+        : undefined;
+
+      console.log("NODE_ENV:", process.env.NODE_ENV);
+      console.log("Using Chrome path:", chromePath);
+
       const browser = await puppeteer.launch({
-        executablePath: isProduction ? "/opt/render/.cache/puppeteer/chrome/linux-146.0.7680.66/chrome-linux64/chrome" : undefined,
+        executablePath: chromePath,
         headless: true,
         args: [
           "--no-sandbox", 
@@ -191,13 +198,17 @@ async function generatePdfFromHtml(htmlContent) {
           }
       })
       // console.log("PDF buffer*************")
-      await browser.close()
   
       return pdfBuffer
     } catch (error) {
-      console.error("PDF Generation Error:");
+      console.error("PDF Generation Error:", error);
       console.error("Message:", error.message);
       console.error("Stack:", error.stack);
+    }
+    finally {
+      if(browser){
+        await browser.close();
+      }
     }
 }
 
