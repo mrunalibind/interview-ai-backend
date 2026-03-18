@@ -166,9 +166,9 @@ Each technicalQuestions item must be an object with question, intention, and ans
 
 async function generatePdfFromHtml(htmlContent) {
     try {
-      // const isProduction = process.env.NODE_ENV == "production";
+      const isProduction = process.env.NODE_ENV == "production";
       const browser = await puppeteer.launch({
-        // executablePath: isProduction ? "/opt/render/.cache/puppeteer/chrome/linux-146.0.7680.66/chrome-linux64/chrome" : undefined,
+        executablePath: isProduction ? "/opt/render/.cache/puppeteer/chrome/linux-146.0.7680.66/chrome-linux64/chrome" : undefined,
         headless: true,
         args: [
           "--no-sandbox", 
