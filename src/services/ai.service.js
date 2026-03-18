@@ -2,6 +2,8 @@ const { GoogleGenAI } = require("@google/genai")
 const { z } = require("zod")
 const { zodToJsonSchema } = require("zod-to-json-schema")
 const puppeteer = require("puppeteer")
+const fs = require("fs");
+const path = require("path");
 
 const ai = new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY
@@ -164,11 +166,18 @@ Each technicalQuestions item must be an object with question, intention, and ans
 
 }
 
+function getChromePath() {
+  const base = "/opt/render/.cache/puppeteer/chrome";
+  const folders = fs.readdirSync(base);
+  const chromeFolder = folders.find(f => f.startsWith("linux-"));
+  return path.join(base, chromeFolder, "chrome-linux64", "chrome");
+}
+
 async function generatePdfFromHtml(htmlContent) {
     try {
       const chromePath =
       process.env.NODE_ENV === "production"
-        ? "/opt/render/.cache/puppeteer/chrome/linux-146.0.7680.66/chrome-linux64/chrome"
+        ? getChromePath()
         : undefined;
 
       console.log("NODE_ENV:", process.env.NODE_ENV);
